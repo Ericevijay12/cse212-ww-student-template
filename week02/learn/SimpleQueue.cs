@@ -1,4 +1,7 @@
-﻿public class SimpleQueue {
+using System;
+using System.Collections.Generic;
+
+public class SimpleQueue {
     public static void Run() {
         // Test Cases
 
@@ -10,7 +13,7 @@
         queue.Enqueue(100);
         var value = queue.Dequeue();
         Console.WriteLine(value);
-        // Defect(s) Found:
+        // Defect(s) Found: Fixed Enqueue to add to back and Dequeue to pull from index 0.
 
         Console.WriteLine("------------");
 
@@ -28,7 +31,7 @@
         Console.WriteLine(value);
         value = queue.Dequeue();
         Console.WriteLine(value);
-        // Defect(s) Found: 
+        // Defect(s) Found: Fixed indexing error; Dequeue was trying to skip the first element.
 
         Console.WriteLine("------------");
 
@@ -44,7 +47,7 @@
         catch (IndexOutOfRangeException) {
             Console.WriteLine("I got the exception as expected.");
         }
-        // Defect(s) Found: 
+        // Defect(s) Found: None (The exception logic was already correct).
     }
 
     private readonly List<int> _queue = new();
@@ -53,8 +56,9 @@
     /// Enqueue the value provided into the queue
     /// </summary>
     /// <param name="value">Integer value to add to the queue</param>
-    private void Enqueue(int value) {
-        _queue.Insert(0, value);
+    public void Enqueue(int value) {
+        // FIX: Add to the back of the list
+        _queue.Add(value); 
     }
 
     /// <summary>
@@ -62,12 +66,13 @@
     /// </summary>
     /// <exception cref="IndexOutOfRangeException">If queue is empty</exception>
     /// <returns>First integer in the queue</returns>
-    private int Dequeue() {
+    public int Dequeue() {
         if (_queue.Count <= 0)
             throw new IndexOutOfRangeException();
 
-        var value = _queue[1];
-        _queue.RemoveAt(1);
+        // FIX: The front of the queue is always index 0
+        var value = _queue[0];
+        _queue.RemoveAt(0);
         return value;
     }
 }
