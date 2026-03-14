@@ -1,27 +1,43 @@
+using System;
+using System.Collections.Generic;
+
+public class PriorityQueue
+{
+    private List<PriorityItem> _queue = new();
+
+    public void Enqueue(string value, int priority)
+    {
+        var newNode = new PriorityItem(value, priority);
+        _queue.Add(newNode);
+    }
+
     public string Dequeue()
     {
-        if (_queue.Count == 0) // Verify the queue is not empty
+        if (_queue.Count == 0) 
         {
             // Requirement: Must throw InvalidOperationException with this exact message
             throw new InvalidOperationException("The queue is empty.");
         }
 
-        // Find the index of the item with the highest priority to remove
         var highPriorityIndex = 0;
-        
-        // FIX 1: Loop through the entire list (index < _queue.Count)
+        // FIX: Loop through the entire list to find highest priority
         for (int index = 1; index < _queue.Count; index++)
         {
-            // FIX 2: Use > instead of >= to preserve FIFO for ties
+            // FIX: Use > instead of >= to preserve FIFO for ties
             if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
                 highPriorityIndex = index;
         }
 
-        // Save the value to return it later
         var value = _queue[highPriorityIndex].Value;
         
-        // FIX 3: Actually remove the item from the queue
+        // FIX: Actually remove the item from the queue
         _queue.RemoveAt(highPriorityIndex);
         
         return value;
     }
+
+    public override string ToString()
+    {
+        return $"[{string.Join(", ", _queue)}]";
+    }
+}
