@@ -7,19 +7,13 @@ using System.Text.Json;
 
 public static class SetsAndMaps
 {
-    /// <summary>
-    /// Problem 1: Find symmetric pairs of 2-character words in O(n) time.
-    /// </summary>
     public static string[] FindPairs(string[] words)
     {
         var result = new List<string>();
         var seen = new HashSet<string>();
         foreach (var word in words)
         {
-            // Reverse the 2-character word
             string reversed = new string(new char[] { word[1], word[0] });
-
-            // If we've already seen the reverse, it's a symmetric pair
             if (seen.Contains(reversed))
             {
                 result.Add($"{reversed} & {word}");
@@ -32,16 +26,12 @@ public static class SetsAndMaps
         return result.ToArray();
     }
 
-    /// <summary>
-    /// Problem 2: Summarize degrees from a census file.
-    /// </summary>
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // The degree information is in column 4 (index 4)
             if (fields.Length > 4)
             {
                 string degree = fields[4].Trim();
@@ -54,12 +44,8 @@ public static class SetsAndMaps
         return degrees;
     }
 
-    /// <summary>
-    /// Problem 3: Determine if two words are anagrams using a dictionary.
-    /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // Ignore spaces and case
         string clean1 = word1.Replace(" ", "").ToLower();
         string clean2 = word2.Replace(" ", "").ToLower();
 
@@ -79,9 +65,6 @@ public static class SetsAndMaps
         return true;
     }
 
-    /// <summary>
-    /// Problem 5: Fetch and summarize daily earthquake data from USGS.
-    /// </summary>
     public static string[] EarthquakeDailySummary()
     {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
@@ -92,28 +75,12 @@ public static class SetsAndMaps
         var json = reader.ReadToEnd();
         
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        
+        // We assume FeatureCollection is defined elsewhere in your project files
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // Format: "Place - Mag Magnitude"
         return featureCollection.Features
             .Select(f => $"{f.Properties.Place} - Mag {f.Properties.Mag}")
             .ToArray();
     }
-}
-
-// These classes support Problem 5: JSON Deserialization
-public class FeatureCollection
-{
-    public Feature[] Features { get; set; }
-}
-
-public class Feature
-{
-    public Properties Properties { get; set; }
-}
-
-public class Properties
-{
-    public double Mag { get; set; }
-    public string Place { get; set; }
 }
