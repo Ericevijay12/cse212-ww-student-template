@@ -9,14 +9,11 @@ public class BinarySearchTree : IEnumerable<int>
     /// </summary>
     public void Insert(int value)
     {
-        // Create new node
         Node newNode = new(value);
-        // If the list is empty, then point both head and tail to the new node.
         if (_root is null)
         {
             _root = newNode;
         }
-        // If the list is not empty, then only head will be affected.
         else
         {
             _root.Insert(value);
@@ -24,26 +21,20 @@ public class BinarySearchTree : IEnumerable<int>
     }
 
     /// <summary>
-    /// Check to see if the tree contains a certain value
+    /// Check to see if the tree contains a certain value.
     /// </summary>
-    /// <param name="value">The value to look for</param>
-    /// <returns>true if found, otherwise false</returns>
     public bool Contains(int value)
     {
         return _root != null && _root.Contains(value);
     }
 
-    /// <summary>
-    /// Yields all values in the tree
-    /// </summary>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        // call the generic version of the method
         return GetEnumerator();
     }
 
     /// <summary>
-    /// Iterate forward through the BST
+    /// Iterate forward through the BST (Smallest to Largest).
     /// </summary>
     public IEnumerator<int> GetEnumerator()
     {
@@ -66,7 +57,7 @@ public class BinarySearchTree : IEnumerable<int>
     }
 
     /// <summary>
-    /// Iterate backward through the BST.
+    /// Iterate backward through the BST (Largest to Smallest).
     /// </summary>
     public IEnumerable Reverse()
     {
@@ -78,13 +69,21 @@ public class BinarySearchTree : IEnumerable<int>
         }
     }
 
+    /// <summary>
+    /// Problem 3: Traverse the tree backwards (Right -> Root -> Left).
+    /// </summary>
     private void TraverseBackward(Node? node, List<int> values)
     {
-        // TODO Problem 3
+        if (node is not null)
+        {
+            TraverseBackward(node.Right, values);
+            values.Add(node.Data);
+            TraverseBackward(node.Left, values);
+        }
     }
 
     /// <summary>
-    /// Get the height of the tree
+    /// Problem 4: Get the height of the entire tree starting from root.
     /// </summary>
     public int GetHeight()
     {
@@ -96,6 +95,30 @@ public class BinarySearchTree : IEnumerable<int>
     public override string ToString()
     {
         return "<Bst>{" + string.Join(", ", this) + "}";
+    }
+
+    /// <summary>
+    /// Problem 5: Create a balanced BST from a sorted array.
+    /// </summary>
+    public static void CreateTreeFromSortedList(BinarySearchTree bst, int[] sortedList)
+    {
+        InsertMiddle(bst, sortedList, 0, sortedList.Length - 1);
+    }
+
+    /// <summary>
+    /// Problem 5 Helper: Recursively inserts the middle element of current range.
+    /// </summary>
+    private static void InsertMiddle(BinarySearchTree bst, int[] values, int first, int last)
+    {
+        if (first > last)
+            return;
+
+        int mid = (first + last) / 2;
+        bst.Insert(values[mid]);
+
+        // Recursively handle the left and right halves
+        InsertMiddle(bst, values, first, mid - 1);
+        InsertMiddle(bst, values, mid + 1, last);
     }
 }
 
